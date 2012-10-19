@@ -4,7 +4,7 @@ cp -R public tmp/
 git checkout gh-pages
 cp -R tmp/public/* .
 git add .
-git commit -m -a "update from source"
+git commit -a -m "update from source"
 git push origin gh-pages
 git checkout master
 
