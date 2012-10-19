@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Hiragana trainer</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="javascripts/application.js"></script>
+    <style>
+      body {
+        background: #111;
+        color: #CCC;
+        font-family: Arial, sans-serif;
+      }
+      table#choices {
+        width: 100%;
+      }
+      table#choices td {
+        text-align: center;
+        padding: 0;
+        width: 20%;
+      }
+      table#choices tbody td {
+        background: #222;
+        text-transform: uppercase;
+      }
+      table#choices #header td {
+        background: transparent;
+      }
+      td#challenge {
+        border: solid 1px #999;
+      }
+      #stats span {
+        margin: 0 1em
+      }
+      #incorrect {
+        color: #C66;
+      }
+      #correct-count, #correct-percentage {
+        color: green;
+      }
+      #incorrect-count {
+        color: #C66;
+      }
+      #stats button {
+        display: inline;
+        background: #986;
+        border: 0;
+        text-transform: uppercase;
+        font-family: Arial, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <table id="choices">
+      <thead>
+        <tr id="header">
+          <td id="challenge">か</td>
+          <td id="incorrect">か</td>
+          <td></td>
+          <td colspan="2" id="stats">
+            <span id="correct-count"></span>
+            <span id="incorrect-count"></span>
+            <span id="correct-percentage"></span>
+            <button id="reset-button">reset</button>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+
+  </body>
+</html>
