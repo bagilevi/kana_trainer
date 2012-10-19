@@ -79,9 +79,10 @@ app =
   start: ->
     @insertTable()
     @resizeTable()
-    $(window).resize(@resizeTable)
+    self = @
+    $(window).resize ->
+      self.resizeTable()
     $('.choice').live 'click', (e) =>
-      console.log e.target
       @checkInput($(e.target).data('roman'), $(e.target).data('kana'))
     @reset()
     $('#reset-button').click =>
@@ -120,6 +121,7 @@ app =
       fontSize -= (fontSize - 15) / 2
     $('#choices thead td').css('height', "#{rowSize}px").css('font-size', "#{fontSize * 1.5}px")
     $('#choices tbody td').css('height', "#{rowSize}px").css('font-size', "#{fontSize }px")
+    $('#stats').css('font-size', fontSize * 0.75)
 
 
   populateQueue: ->
@@ -138,7 +140,6 @@ app =
     $('#incorrect').html('')
 
   checkInput: (selectedRoman, selectedKana) ->
-    console.log(selectedRoman, selectedKana)
     correctRoman = @currentPair[0]
     if selectedRoman == correctRoman
       @displayChallenge()
@@ -157,7 +158,6 @@ app =
     e = [roman, kana]
     @concatToQueue [e, e, e]
     @queue = @queue.shuffle()
-    console.log @queue.length
 
   displayStats: ->
     $('#correct-count').html(@correct)
