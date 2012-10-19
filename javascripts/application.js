@@ -87,12 +87,15 @@
     correct: 0,
     incorrect: 0,
     start: function() {
-      var _this = this;
+      var self,
+        _this = this;
       this.insertTable();
       this.resizeTable();
-      $(window).resize(this.resizeTable);
+      self = this;
+      $(window).resize(function() {
+        return self.resizeTable();
+      });
       $('.choice').live('click', function(e) {
-        console.log(e.target);
         return _this.checkInput($(e.target).data('roman'), $(e.target).data('kana'));
       });
       this.reset();
@@ -142,7 +145,8 @@
         fontSize -= (fontSize - 15) / 2;
       }
       $('#choices thead td').css('height', "" + rowSize + "px").css('font-size', "" + (fontSize * 1.5) + "px");
-      return $('#choices tbody td').css('height', "" + rowSize + "px").css('font-size', "" + fontSize + "px");
+      $('#choices tbody td').css('height', "" + rowSize + "px").css('font-size', "" + fontSize + "px");
+      return $('#stats').css('font-size', fontSize * 0.75);
     },
     populateQueue: function() {
       if (this.queue.length < 20) {
@@ -162,7 +166,6 @@
     },
     checkInput: function(selectedRoman, selectedKana) {
       var correctRoman;
-      console.log(selectedRoman, selectedKana);
       correctRoman = this.currentPair[0];
       if (selectedRoman === correctRoman) {
         this.displayChallenge();
@@ -182,8 +185,7 @@
       var e;
       e = [roman, kana];
       this.concatToQueue([e, e, e]);
-      this.queue = this.queue.shuffle();
-      return console.log(this.queue.length);
+      return this.queue = this.queue.shuffle();
     },
     displayStats: function() {
       $('#correct-count').html(this.correct);
