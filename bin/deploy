@@ -1,0 +1,12 @@
+rake build
+git commit
+cp -R public tmp/public
+git checkout gh-pages
+cp -R tmp/public/* .
+git commit -m "update from source"
+git push origin gh-pages
+git checkout master
+
+
+
+
