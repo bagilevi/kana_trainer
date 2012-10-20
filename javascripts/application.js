@@ -22,62 +22,6 @@
         ku: 'く',
         ke: 'け',
         ko: 'こ'
-      },
-      s: {
-        sa: 'さ',
-        shi: 'し',
-        su: 'す',
-        se: 'せ',
-        so: 'そ'
-      },
-      t: {
-        ta: 'た',
-        chi: 'ち',
-        tu: 'つ',
-        te: 'て',
-        to: 'と'
-      },
-      n: {
-        na: 'な',
-        ni: 'に',
-        nu: 'ぬ',
-        ne: 'ね',
-        no: 'の'
-      },
-      h: {
-        ha: 'は',
-        hi: 'ひ',
-        fu: 'ふ',
-        he: 'へ',
-        ho: 'ほ'
-      },
-      m: {
-        ma: 'ま',
-        mi: 'み',
-        mu: 'む',
-        me: 'め',
-        mo: 'も'
-      },
-      y: {
-        ya: 'や',
-        yi: null,
-        yu: 'ゆ',
-        ye: null,
-        yo: 'よ'
-      },
-      r: {
-        ra: 'ら',
-        ri: 'り',
-        ru: 'る',
-        re: 'れ',
-        ro: 'ろ'
-      },
-      w: {
-        wa: 'わ',
-        wi: 'ゐ',
-        n: 'ん',
-        we: 'ゑ',
-        wo: 'を'
       }
     },
     rowCount: null,
@@ -159,7 +103,7 @@
     displayChallenge: function() {
       var newPair;
       this.populateQueue();
-      newPair = this.pairs.shift();
+      newPair = this.queue.shift();
       this.currentPair = newPair;
       $('#challenge').html(this.currentPair[1]);
       return $('#incorrect').html('');
@@ -195,6 +139,16 @@
       } else {
         return $('#correct-percentage').html("0%");
       }
+    },
+    debugQueue: function() {
+      var pair, s, _i, _len, _ref;
+      s = "";
+      _ref = this.queue;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        pair = _ref[_i];
+        s += "" + pair[0] + " ";
+      }
+      return console.log(s);
     }
   };
 
