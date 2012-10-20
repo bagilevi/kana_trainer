@@ -135,6 +135,10 @@ app =
   displayChallenge: ->
     @populateQueue()
     newPair = @queue.shift()
+    if @currentPair
+      while newPair[0] == @currentPair[0]
+        @queue.push(newPair)
+        newPair = @queue.shift()
     @currentPair = newPair
     $('#challenge').html(@currentPair[1])
     $('#incorrect').html('')
