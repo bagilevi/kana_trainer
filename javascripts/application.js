@@ -80,78 +80,6 @@
           we: 'ゑ',
           wo: 'を'
         }
-      },
-      katakana: {
-        a: {
-          a: 'ア',
-          i: 'イ',
-          u: 'ウ',
-          e: 'エ',
-          o: 'オ'
-        },
-        k: {
-          ka: 'カ',
-          ki: 'キ',
-          ku: 'ク',
-          ke: 'ケ',
-          ko: 'コ'
-        },
-        s: {
-          sa: 'サ',
-          shi: 'シ',
-          su: 'ス',
-          se: 'セ',
-          so: 'ソ'
-        },
-        t: {
-          ta: 'タ',
-          chi: 'チ',
-          tsu: 'ツ',
-          te: 'テ',
-          to: 'ト'
-        },
-        n: {
-          na: 'ナ',
-          ni: 'ニ',
-          nu: 'ヌ',
-          ne: 'ネ',
-          no: 'ノ'
-        },
-        h: {
-          ha: 'ハ',
-          hi: 'ヒ',
-          fu: 'フ',
-          he: 'ヘ',
-          ho: 'ホ'
-        },
-        m: {
-          ma: 'マ',
-          mi: 'ミ',
-          mu: 'ム',
-          me: 'メ',
-          mo: 'モ'
-        },
-        y: {
-          ya: 'ヤ',
-          yi: null,
-          yu: 'ユ',
-          ye: null,
-          yo: 'ヨ'
-        },
-        r: {
-          ra: 'ラ',
-          ri: 'リ',
-          ru: 'ル',
-          re: 'レ',
-          ro: 'ロ'
-        },
-        w: {
-          wa: 'ワ',
-          wi: 'ヰ',
-          n: 'ン',
-          we: 'ヱ',
-          wo: 'ヲ'
-        }
       }
     },
     rowCount: null,
@@ -185,7 +113,8 @@
       this.incorrect = 0;
       this.queue = [];
       this.displayStats();
-      return this.displayChallenge();
+      this.displayChallenge();
+      return this.score = 0;
     },
     insertTable: function() {
       var $rowEl, alreadyInserted, row, row_romaji, subtable, syllabary, _ref, _results;
@@ -292,6 +221,7 @@
     },
     displayChallenge: function() {
       var newPair;
+      this.tDisplayed = new Date().getTime();
       this.populateQueue();
       newPair = this.queue.shift();
       if (this.currentPair) {
@@ -307,22 +237,29 @@
       return this.highlighted = false;
     },
     checkInput: function($el) {
-      var correctRomaji, selectedKana, selectedRomaji, sylabbary;
+      var answerDelayMs, correctRomaji, selectedKana, selectedRomaji, sylabbary, tAnswered;
       selectedRomaji = $el.data('romaji');
       sylabbary = this.currentPair[2];
       selectedKana = $el.data(sylabbary);
       correctRomaji = this.currentPair[0];
       if (selectedRomaji === correctRomaji) {
-        this.displayChallenge();
         if (!this.highlighted) {
           this.correct += 1;
+          tAnswered = new Date().getTime();
+          answerDelayMs = tAnswered - this.tDisplayed;
+          if (answerDelayMs >= 2500) {
+            this.reinsertToQueue(this.currentPair);
+          }
+          this.scoreSuccess(answerDelayMs);
         }
+        this.displayChallenge();
       } else {
         this.failCount += 1;
         this.reinsertToQueue(this.currentPair);
-        this.reinsertToQueue(selectedRomaji, selectedKana);
+        this.reinsertToQueue([selectedRomaji, selectedKana, sylabbary]);
         this.displayIncorrect(selectedRomaji, selectedKana);
         this.incorrect += 1;
+        this.scoreFailure();
       }
       this.displayStats();
       if (this.failCount >= 3) {
@@ -344,13 +281,7 @@
       }, 1000);
     },
     displayStats: function() {
-      $('#correct-count').html(this.correct);
-      $('#incorrect-count').html(this.incorrect);
-      if (this.correct + this.incorrect !== 0) {
-        return $('#correct-percentage').html("" + (Math.floor(this.correct / (this.correct + this.incorrect) * 100)) + "%");
-      } else {
-        return $('#correct-percentage').html("0%");
-      }
+      return $('#correct-count').html(this.score);
     },
     debugQueue: function() {
       var pair, s, _i, _len, _ref;
@@ -361,6 +292,37 @@
         s += "" + pair[0] + " ";
       }
       return console.log(s);
+    },
+    scoreSuccess: function(delayMs) {
+      if (delayMs <= 5000) {
+        if (delayMs <= 500) {
+          return this.score += 10;
+        } else if (delayMs <= 600) {
+          return this.score += 9;
+        } else if (delayMs <= 700) {
+          return this.score += 8;
+        } else if (delayMs <= 800) {
+          return this.score += 7;
+        } else if (delayMs <= 900) {
+          return this.score += 6;
+        } else if (delayMs <= 1000) {
+          return this.score += 5;
+        } else if (delayMs <= 1100) {
+          return this.score += 4;
+        } else if (delayMs <= 1300) {
+          return this.score += 3;
+        } else if (delayMs <= 1500) {
+          return this.score += 2;
+        } else {
+          return this.score += 1;
+        }
+      }
+    },
+    scoreFailure: function() {
+      this.score -= Math.max(10, this.score / 2);
+      if (this.score < 0) {
+        return this.score = 0;
+      }
     }
   };
 
