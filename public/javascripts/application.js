@@ -113,7 +113,8 @@
       this.incorrect = 0;
       this.queue = [];
       this.displayStats();
-      return this.displayChallenge();
+      this.displayChallenge();
+      return this.score = 0;
     },
     insertTable: function() {
       var $rowEl, alreadyInserted, row, row_romaji, subtable, syllabary, _ref, _results;
@@ -250,6 +251,7 @@
           if (answerDelayMs >= 2500) {
             this.reinsertToQueue(this.currentPair);
           }
+          this.scoreSuccess(answerDelayMs);
         }
         this.displayChallenge();
       } else {
@@ -258,6 +260,7 @@
         this.reinsertToQueue([selectedRomaji, selectedKana, sylabbary]);
         this.displayIncorrect(selectedRomaji, selectedKana);
         this.incorrect += 1;
+        this.scoreFailure();
       }
       this.displayStats();
       if (this.failCount >= 3) {
@@ -280,13 +283,7 @@
       }, 1000);
     },
     displayStats: function() {
-      $('#correct-count').html(this.correct);
-      $('#incorrect-count').html(this.incorrect);
-      if (this.correct + this.incorrect !== 0) {
-        return $('#correct-percentage').html("" + (Math.floor(this.correct / (this.correct + this.incorrect) * 100)) + "%");
-      } else {
-        return $('#correct-percentage').html("0%");
-      }
+      return $('#correct-count').html(this.score);
     },
     debugQueue: function() {
       var pair, s, _i, _len, _ref;
@@ -297,6 +294,37 @@
         s += "" + pair[0] + " ";
       }
       return console.log(s);
+    },
+    scoreSuccess: function(delayMs) {
+      if (delayMs <= 5000) {
+        if (delayMs <= 500) {
+          return this.score += 10;
+        } else if (delayMs <= 600) {
+          return this.score += 9;
+        } else if (delayMs <= 700) {
+          return this.score += 8;
+        } else if (delayMs <= 800) {
+          return this.score += 7;
+        } else if (delayMs <= 900) {
+          return this.score += 6;
+        } else if (delayMs <= 1000) {
+          return this.score += 5;
+        } else if (delayMs <= 1100) {
+          return this.score += 4;
+        } else if (delayMs <= 1300) {
+          return this.score += 3;
+        } else if (delayMs <= 1500) {
+          return this.score += 2;
+        } else {
+          return this.score += 1;
+        }
+      }
+    },
+    scoreFailure: function() {
+      this.score -= Math.max(10, this.score / 2);
+      if (this.score < 0) {
+        return this.score = 0;
+      }
     }
   };
 

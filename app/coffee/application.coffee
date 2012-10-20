@@ -161,6 +161,7 @@ app =
     @queue = []
     @displayStats()
     @displayChallenge()
+    @score = 0
 
   insertTable: ->
     @rowCount = 0
@@ -249,6 +250,7 @@ app =
         answerDelayMs = (tAnswered - @tDisplayed)
         if answerDelayMs >= 2500
           @reinsertToQueue(@currentPair)
+        @scoreSuccess(answerDelayMs)
       @displayChallenge()
     else
       @failCount += 1
@@ -256,6 +258,7 @@ app =
       @reinsertToQueue([selectedRomaji, selectedKana, sylabbary])
       @displayIncorrect(selectedRomaji, selectedKana)
       @incorrect += 1
+      @scoreFailure()
     @displayStats()
     if @failCount >= 3
       @highlighted = true
@@ -277,18 +280,47 @@ app =
     , 1000
 
   displayStats: ->
-    $('#correct-count').html(@correct)
-    $('#incorrect-count').html(@incorrect)
-    unless @correct+@incorrect == 0
-      $('#correct-percentage').html("#{Math.floor(@correct/(@correct+@incorrect)*100)}%")
-    else
-      $('#correct-percentage').html("0%")
+    #$('#correct-count').html(@correct)
+    #$('#incorrect-count').html(@incorrect)
+    #unless @correct+@incorrect == 0
+      #$('#correct-percentage').html("#{Math.floor(@correct/(@correct+@incorrect)*100)}%")
+    #else
+      #$('#correct-percentage').html("0%")
+    $('#correct-count').html(@score)
 
   debugQueue: ->
     s = ""
     for pair in @queue
       s += "#{pair[0]} "
     console.log s
+
+  scoreSuccess: (delayMs) ->
+    if delayMs <= 5000
+      if delayMs <= 500
+        @score += 10
+      else if delayMs <= 600
+        @score += 9
+      else if delayMs <= 700
+        @score += 8
+      else if delayMs <= 800
+        @score += 7
+      else if delayMs <= 900
+        @score += 6
+      else if delayMs <= 1000
+        @score += 5
+      else if delayMs <= 1100
+        @score += 4
+      else if delayMs <= 1300
+        @score += 3
+      else if delayMs <= 1500
+        @score += 2
+      else
+        @score += 1
+
+  scoreFailure: ->
+    @score -= Math.max(10, @score / 2)
+    @score = 0 if @score < 0
+
 
 
 
