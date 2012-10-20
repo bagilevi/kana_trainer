@@ -231,7 +231,6 @@
         }
       }
       this.currentPair = newPair;
-      console.log('currentPair', this.currentPair);
       $('#challenge').html(this.currentPair[1]);
       $('#incorrect').html('');
       this.failCount = 0;
@@ -265,9 +264,8 @@
       this.displayStats();
       if (this.failCount >= 3) {
         this.highlighted = true;
-        this.highlightCorrectAnswer(correctRomaji);
+        return this.highlightCorrectAnswer(correctRomaji);
       }
-      return this.debugQueue();
     },
     displayIncorrect: function(selectedRomaji, selectedKana) {
       return $('#incorrect').html(selectedKana);

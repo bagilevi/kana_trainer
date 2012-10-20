@@ -232,7 +232,6 @@ app =
         @queue.push(newPair)
         newPair = @queue.shift()
     @currentPair = newPair
-    console.log 'currentPair', @currentPair
     $('#challenge').html(@currentPair[1])
     $('#incorrect').html('')
     @failCount = 0
@@ -264,7 +263,7 @@ app =
       @highlighted = true
       @highlightCorrectAnswer(correctRomaji)
 
-    @debugQueue()
+    #@debugQueue()
 
   displayIncorrect: (selectedRomaji, selectedKana) ->
     $('#incorrect').html(selectedKana)
