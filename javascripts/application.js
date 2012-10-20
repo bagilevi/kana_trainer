@@ -9,75 +9,149 @@
 
   app = {
     table: {
-      a: {
-        a: 'あ',
-        i: 'い',
-        u: 'う',
-        e: 'え',
-        o: 'お'
+      hiragana: {
+        a: {
+          a: 'あ',
+          i: 'い',
+          u: 'う',
+          e: 'え',
+          o: 'お'
+        },
+        k: {
+          ka: 'か',
+          ki: 'き',
+          ku: 'く',
+          ke: 'け',
+          ko: 'こ'
+        },
+        s: {
+          sa: 'さ',
+          shi: 'し',
+          su: 'す',
+          se: 'せ',
+          so: 'そ'
+        },
+        t: {
+          ta: 'た',
+          chi: 'ち',
+          tsu: 'つ',
+          te: 'て',
+          to: 'と'
+        },
+        n: {
+          na: 'な',
+          ni: 'に',
+          nu: 'ぬ',
+          ne: 'ね',
+          no: 'の'
+        },
+        h: {
+          ha: 'は',
+          hi: 'ひ',
+          fu: 'ふ',
+          he: 'へ',
+          ho: 'ほ'
+        },
+        m: {
+          ma: 'ま',
+          mi: 'み',
+          mu: 'む',
+          me: 'め',
+          mo: 'も'
+        },
+        y: {
+          ya: 'や',
+          yi: null,
+          yu: 'ゆ',
+          ye: null,
+          yo: 'よ'
+        },
+        r: {
+          ra: 'ら',
+          ri: 'り',
+          ru: 'る',
+          re: 'れ',
+          ro: 'ろ'
+        },
+        w: {
+          wa: 'わ',
+          wi: 'ゐ',
+          n: 'ん',
+          we: 'ゑ',
+          wo: 'を'
+        }
       },
-      k: {
-        ka: 'か',
-        ki: 'き',
-        ku: 'く',
-        ke: 'け',
-        ko: 'こ'
-      },
-      s: {
-        sa: 'さ',
-        shi: 'し',
-        su: 'す',
-        se: 'せ',
-        so: 'そ'
-      },
-      t: {
-        ta: 'た',
-        chi: 'ち',
-        tsu: 'つ',
-        te: 'て',
-        to: 'と'
-      },
-      n: {
-        na: 'な',
-        ni: 'に',
-        nu: 'ぬ',
-        ne: 'ね',
-        no: 'の'
-      },
-      h: {
-        ha: 'は',
-        hi: 'ひ',
-        fu: 'ふ',
-        he: 'へ',
-        ho: 'ほ'
-      },
-      m: {
-        ma: 'ま',
-        mi: 'み',
-        mu: 'む',
-        me: 'め',
-        mo: 'も'
-      },
-      y: {
-        ya: 'や',
-        yi: null,
-        yu: 'ゆ',
-        ye: null,
-        yo: 'よ'
-      },
-      r: {
-        ra: 'ら',
-        ri: 'り',
-        ru: 'る',
-        re: 'れ',
-        ro: 'ろ'
-      },
-      w: {
-        wa: 'わ',
-        wi: 'ゐ',
-        n: 'ん',
-        we: 'ゑ',
-        wo: 'を'
+      katakana: {
+        a: {
+          a: 'ア',
+          i: 'イ',
+          u: 'ウ',
+          e: 'エ',
+          o: 'オ'
+        },
+        k: {
+          ka: 'カ',
+          ki: 'キ',
+          ku: 'ク',
+          ke: 'ケ',
+          ko: 'コ'
+        },
+        s: {
+          sa: 'サ',
+          shi: 'シ',
+          su: 'ス',
+          se: 'セ',
+          so: 'ソ'
+        },
+        t: {
+          ta: 'タ',
+          chi: 'チ',
+          tsu: 'ツ',
+          te: 'テ',
+          to: 'ト'
+        },
+        n: {
+          na: 'ナ',
+          ni: 'ニ',
+          nu: 'ヌ',
+          ne: 'ネ',
+          no: 'ノ'
+        },
+        h: {
+          ha: 'ハ',
+          hi: 'ヒ',
+          fu: 'フ',
+          he: 'ヘ',
+          ho: 'ホ'
+        },
+        m: {
+          ma: 'マ',
+          mi: 'ミ',
+          mu: 'ム',
+          me: 'メ',
+          mo: 'モ'
+        },
+        y: {
+          ya: 'ヤ',
+          yi: null,
+          yu: 'ユ',
+          ye: null,
+          yo: 'ヨ'
+        },
+        r: {
+          ra: 'ラ',
+          ri: 'リ',
+          ru: 'ル',
+          re: 'レ',
+          ro: 'ロ'
+        },
+        w: {
+          wa: 'ワ',
+          wi: 'ヰ',
+          n: 'ン',
+          we: 'ヱ',
+          wo: 'ヲ'
+        }
       }
     },
     rowCount: null,
@@ -86,9 +160,12 @@
     queue: [],
     correct: 0,
     incorrect: 0,
+    failCount: 0,
+    highlighted: false,
     start: function() {
       var self,
         _this = this;
+      this.preparePairs();
       this.insertTable();
       this.resizeTable();
       self = this;
@@ -96,7 +173,7 @@
         return self.resizeTable();
       });
       $('.choice').live('click', function(e) {
-        return _this.checkInput($(e.target).data('roman'), $(e.target).data('kana'));
+        return _this.checkInput($(e.target));
       });
       this.reset();
       return $('#reset-button').click(function() {
@@ -111,29 +188,87 @@
       return this.displayChallenge();
     },
     insertTable: function() {
-      var $cell_el, $row_el, kana, roman, row, row_roman, _ref, _results;
-      this.pairs = [];
+      var $rowEl, alreadyInserted, row, row_romaji, subtable, syllabary, _ref, _results;
       this.rowCount = 0;
+      console.log(this.table);
+      alreadyInserted = false;
       _ref = this.table;
       _results = [];
-      for (row_roman in _ref) {
-        row = _ref[row_roman];
-        this.rowCount += 1;
-        $row_el = $('<tr/>');
-        for (roman in row) {
-          kana = row[roman];
-          $cell_el = $('<td/>');
-          if (kana) {
-            $cell_el.attr('id', "choice_" + roman);
-            $cell_el.addClass('choice');
-            $cell_el.data('roman', roman);
-            $cell_el.data('kana', kana);
-            $cell_el.append(roman);
-            this.pairs.push([roman, kana]);
+      for (syllabary in _ref) {
+        subtable = _ref[syllabary];
+        for (row_romaji in subtable) {
+          row = subtable[row_romaji];
+          if (alreadyInserted) {
+            this.addDataToHtmlRow(syllabary, row);
+          } else {
+            this.rowCount += 1;
+            $rowEl = this.buildHtmlRow(syllabary, row);
+            $('#choices tbody').append($rowEl);
           }
-          $row_el.append($cell_el);
         }
-        _results.push($('#choices tbody').append($row_el));
+        _results.push(alreadyInserted = true);
+      }
+      return _results;
+    },
+    buildHtmlRow: function(syllabary, row) {
+      var $cellEl, $rowEl, kana, romaji;
+      $rowEl = $('<tr/>');
+      for (romaji in row) {
+        kana = row[romaji];
+        $cellEl = $('<td/>');
+        if (kana) {
+          $cellEl.attr('id', "choice_" + romaji);
+          $cellEl.addClass('choice');
+          $cellEl.data('romaji', romaji);
+          $cellEl.data(syllabary, kana);
+          $cellEl.append(romaji);
+        }
+        $rowEl.append($cellEl);
+      }
+      return $rowEl;
+    },
+    addDataToHtmlRow: function(syllabary, row) {
+      var $cellEl, kana, romaji, _results;
+      _results = [];
+      for (romaji in row) {
+        kana = row[romaji];
+        $cellEl = $("#choice_" + romaji);
+        if (kana) {
+          _results.push($cellEl.data(syllabary, kana));
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    },
+    preparePairs: function() {
+      var kana, romaji, row, row_romaji, subtable, syllabary, _ref, _results;
+      this.pairs = [];
+      _ref = this.table;
+      _results = [];
+      for (syllabary in _ref) {
+        subtable = _ref[syllabary];
+        _results.push((function() {
+          var _results1;
+          _results1 = [];
+          for (row_romaji in subtable) {
+            row = subtable[row_romaji];
+            _results1.push((function() {
+              var _results2;
+              _results2 = [];
+              for (romaji in row) {
+                kana = row[romaji];
+                if (kana) {
+                  _results2.push(this.pairs.push([romaji, kana, syllabary]));
+                } else {
+                  _results2.push(void 0);
+                }
+              }
+              return _results2;
+            }).call(this));
+          }
+          return _results1;
+        }).call(this));
       }
       return _results;
     },
@@ -168,30 +303,48 @@
       }
       this.currentPair = newPair;
       $('#challenge').html(this.currentPair[1]);
-      return $('#incorrect').html('');
+      $('#incorrect').html('');
+      this.failCount = 0;
+      return this.highlighted = false;
     },
-    checkInput: function(selectedRoman, selectedKana) {
-      var correctRoman;
-      correctRoman = this.currentPair[0];
-      if (selectedRoman === correctRoman) {
+    checkInput: function($el) {
+      var correctRomaji, selectedKana, selectedRomaji, sylabbary;
+      selectedRomaji = $el.data('romaji');
+      sylabbary = this.currentPair[2];
+      selectedKana = $el.data(sylabbary);
+      correctRomaji = this.currentPair[0];
+      if (selectedRomaji === correctRomaji) {
         this.displayChallenge();
-        this.correct += 1;
+        if (!this.highlighted) {
+          this.correct += 1;
+        }
       } else {
+        this.failCount += 1;
         this.reinsertToQueue(this.currentPair[0], this.currentPair[1]);
-        this.reinsertToQueue(selectedRoman, selectedKana);
-        this.displayIncorrect(selectedRoman, selectedKana);
+        this.reinsertToQueue(selectedRomaji, selectedKana);
+        this.displayIncorrect(selectedRomaji, selectedKana);
         this.incorrect += 1;
       }
-      return this.displayStats();
+      this.displayStats();
+      if (this.failCount >= 3) {
+        this.highlighted = true;
+        return this.highlightCorrectAnswer(correctRomaji);
+      }
     },
-    displayIncorrect: function(selectedRoman, selectedKana) {
+    displayIncorrect: function(selectedRomaji, selectedKana) {
       return $('#incorrect').html(selectedKana);
     },
-    reinsertToQueue: function(roman, kana) {
+    reinsertToQueue: function(romaji, kana) {
       var e;
-      e = [roman, kana];
+      e = [romaji, kana];
       this.concatToQueue([e, e, e]);
       return this.queue = this.queue.shuffle();
+    },
+    highlightCorrectAnswer: function(romaji) {
+      $("#choice_" + romaji).addClass('highlighted-correct');
+      return setTimeout(function() {
+        return $("#choice_" + romaji).removeClass('highlighted-correct');
+      }, 1000);
     },
     displayStats: function() {
       $('#correct-count').html(this.correct);
