@@ -259,7 +259,7 @@ app =
       @incorrect += 1
       @scoreFailure()
     @displayStats()
-    if @failCount >= 3
+    if @failCount >= 2
       @highlighted = true
       @highlightCorrectAnswer(correctRomaji)
 
@@ -317,7 +317,7 @@ app =
         @score += 1
 
   scoreFailure: ->
-    @score -= Math.max(2, @score / 10)
+    @score -= Math.round(Math.max(2, @score / 2))
     @score = 0 if @score < 0
 
 

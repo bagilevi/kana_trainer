@@ -334,7 +334,7 @@
         this.scoreFailure();
       }
       this.displayStats();
-      if (this.failCount >= 3) {
+      if (this.failCount >= 2) {
         this.highlighted = true;
         return this.highlightCorrectAnswer(correctRomaji);
       }
@@ -391,7 +391,7 @@
       }
     },
     scoreFailure: function() {
-      this.score -= Math.max(2, this.score / 10);
+      this.score -= Math.round(Math.max(2, this.score / 2));
       if (this.score < 0) {
         return this.score = 0;
       }
