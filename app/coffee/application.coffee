@@ -317,7 +317,7 @@ app =
         @score += 1
 
   scoreFailure: ->
-    @score -= Math.max(10, @score / 2)
+    @score -= Math.max(2, @score / 10)
     @score = 0 if @score < 0
 
 

@@ -391,7 +391,7 @@
       }
     },
     scoreFailure: function() {
-      this.score -= Math.max(10, this.score / 2);
+      this.score -= Math.max(2, this.score / 10);
       if (this.score < 0) {
         return this.score = 0;
       }
