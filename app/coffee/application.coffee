@@ -139,6 +139,9 @@ app =
   correct: 0,
   incorrect: 0,
 
+  failCount: 0, # for current kana
+  highlighted: false
+
   start: ->
     @preparePairs()
     @insertTable()
@@ -230,6 +233,8 @@ app =
     @currentPair = newPair
     $('#challenge').html(@currentPair[1])
     $('#incorrect').html('')
+    @failCount = 0
+    @highlighted = false
 
   checkInput: ($el) ->
     selectedRomaji = $el.data('romaji')
@@ -238,13 +243,19 @@ app =
     correctRomaji = @currentPair[0]
     if selectedRomaji == correctRomaji
       @displayChallenge()
-      @correct += 1
+      unless @highlighted
+        @correct += 1
     else
+      @failCount += 1
       @reinsertToQueue(@currentPair[0], @currentPair[1])
       @reinsertToQueue(selectedRomaji, selectedKana)
       @displayIncorrect(selectedRomaji, selectedKana)
       @incorrect += 1
     @displayStats()
+    if @failCount >= 3
+      @highlighted = true
+      @highlightCorrectAnswer(correctRomaji)
+
     #@debugQueue()
 
   displayIncorrect: (selectedRomaji, selectedKana) ->
@@ -254,6 +265,12 @@ app =
     e = [romaji, kana]
     @concatToQueue [e, e, e]
     @queue = @queue.shuffle()
+
+  highlightCorrectAnswer: (romaji) ->
+    $("#choice_#{romaji}").addClass('highlighted-correct')
+    setTimeout ->
+      $("#choice_#{romaji}").removeClass('highlighted-correct')
+    , 1000
 
   displayStats: ->
     $('#correct-count').html(@correct)

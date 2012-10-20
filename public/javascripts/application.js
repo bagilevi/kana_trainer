@@ -160,6 +160,8 @@
     queue: [],
     correct: 0,
     incorrect: 0,
+    failCount: 0,
+    highlighted: false,
     start: function() {
       var self,
         _this = this;
@@ -301,7 +303,9 @@
       }
       this.currentPair = newPair;
       $('#challenge').html(this.currentPair[1]);
-      return $('#incorrect').html('');
+      $('#incorrect').html('');
+      this.failCount = 0;
+      return this.highlighted = false;
     },
     checkInput: function($el) {
       var correctRomaji, selectedKana, selectedRomaji, sylabbary;
@@ -311,14 +315,21 @@
       correctRomaji = this.currentPair[0];
       if (selectedRomaji === correctRomaji) {
         this.displayChallenge();
-        this.correct += 1;
+        if (!this.highlighted) {
+          this.correct += 1;
+        }
       } else {
+        this.failCount += 1;
         this.reinsertToQueue(this.currentPair[0], this.currentPair[1]);
         this.reinsertToQueue(selectedRomaji, selectedKana);
         this.displayIncorrect(selectedRomaji, selectedKana);
         this.incorrect += 1;
       }
-      return this.displayStats();
+      this.displayStats();
+      if (this.failCount >= 3) {
+        this.highlighted = true;
+        return this.highlightCorrectAnswer(correctRomaji);
+      }
     },
     displayIncorrect: function(selectedRomaji, selectedKana) {
       return $('#incorrect').html(selectedKana);
@@ -328,6 +339,12 @@
       e = [romaji, kana];
       this.concatToQueue([e, e, e]);
       return this.queue = this.queue.shuffle();
+    },
+    highlightCorrectAnswer: function(romaji) {
+      $("#choice_" + romaji).addClass('highlighted-correct');
+      return setTimeout(function() {
+        return $("#choice_" + romaji).removeClass('highlighted-correct');
+      }, 1000);
     },
     displayStats: function() {
       $('#correct-count').html(this.correct);
