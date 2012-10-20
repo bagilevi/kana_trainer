@@ -164,7 +164,6 @@ app =
 
   insertTable: ->
     @rowCount = 0
-    console.log @table
     alreadyInserted = false
     for syllabary, subtable of @table
       for row_romaji, row of subtable
@@ -247,7 +246,7 @@ app =
         @correct += 1
     else
       @failCount += 1
-      @reinsertToQueue(@currentPair[0], @currentPair[1])
+      @reinsertToQueue(@currentPair)
       @reinsertToQueue(selectedRomaji, selectedKana)
       @displayIncorrect(selectedRomaji, selectedKana)
       @incorrect += 1
@@ -261,9 +260,8 @@ app =
   displayIncorrect: (selectedRomaji, selectedKana) ->
     $('#incorrect').html(selectedKana)
 
-  reinsertToQueue: (romaji, kana) ->
-    e = [romaji, kana]
-    @concatToQueue [e, e, e]
+  reinsertToQueue: (pair) ->
+    @concatToQueue [pair, pair, pair]
     @queue = @queue.shuffle()
 
   highlightCorrectAnswer: (romaji) ->

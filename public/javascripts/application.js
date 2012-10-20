@@ -190,7 +190,6 @@
     insertTable: function() {
       var $rowEl, alreadyInserted, row, row_romaji, subtable, syllabary, _ref, _results;
       this.rowCount = 0;
-      console.log(this.table);
       alreadyInserted = false;
       _ref = this.table;
       _results = [];
@@ -320,7 +319,7 @@
         }
       } else {
         this.failCount += 1;
-        this.reinsertToQueue(this.currentPair[0], this.currentPair[1]);
+        this.reinsertToQueue(this.currentPair);
         this.reinsertToQueue(selectedRomaji, selectedKana);
         this.displayIncorrect(selectedRomaji, selectedKana);
         this.incorrect += 1;
@@ -334,10 +333,8 @@
     displayIncorrect: function(selectedRomaji, selectedKana) {
       return $('#incorrect').html(selectedKana);
     },
-    reinsertToQueue: function(romaji, kana) {
-      var e;
-      e = [romaji, kana];
-      this.concatToQueue([e, e, e]);
+    reinsertToQueue: function(pair) {
+      this.concatToQueue([pair, pair, pair]);
       return this.queue = this.queue.shuffle();
     },
     highlightCorrectAnswer: function(romaji) {
