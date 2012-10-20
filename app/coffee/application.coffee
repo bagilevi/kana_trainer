@@ -4,66 +4,129 @@ Array::shuffle = -> @sort -> 0.5 - Math.random()
 
 app =
   table:
-    a:
-      a: 'あ',
-      i: 'い',
-      u: 'う',
-      e: 'え',
-      o: 'お',
-    k:
-      ka: 'か',
-      ki: 'き',
-      ku: 'く',
-      ke: 'け',
-      ko: 'こ',
-    s:
-      sa: 'さ',
-      shi: 'し',
-      su: 'す',
-      se: 'せ',
-      so: 'そ',
-    t:
-      ta: 'た',
-      chi: 'ち',
-      tsu: 'つ',
-      te: 'て',
-      to: 'と',
-    n:
-      na: 'な',
-      ni: 'に',
-      nu: 'ぬ',
-      ne: 'ね',
-      no: 'の',
-    h:
-      ha: 'は',
-      hi: 'ひ',
-      fu: 'ふ',
-      he: 'へ',
-      ho: 'ほ',
-    m:
-      ma: 'ま',
-      mi: 'み',
-      mu: 'む',
-      me: 'め',
-      mo: 'も',
-    y:
-      ya: 'や',
-      yi: null,
-      yu: 'ゆ',
-      ye: null,
-      yo: 'よ',
-    r:
-      ra: 'ら',
-      ri: 'り',
-      ru: 'る',
-      re: 'れ',
-      ro: 'ろ',
-    w:
-      wa: 'わ',
-      wi: 'ゐ',
-      n: 'ん',
-      we: 'ゑ',
-      wo: 'を',
+    hiragana:
+      a:
+        a: 'あ',
+        i: 'い',
+        u: 'う',
+        e: 'え',
+        o: 'お',
+      k:
+        ka: 'か',
+        ki: 'き',
+        ku: 'く',
+        ke: 'け',
+        ko: 'こ',
+      s:
+        sa: 'さ',
+        shi: 'し',
+        su: 'す',
+        se: 'せ',
+        so: 'そ',
+      t:
+        ta: 'た',
+        chi: 'ち',
+        tsu: 'つ',
+        te: 'て',
+        to: 'と',
+      n:
+        na: 'な',
+        ni: 'に',
+        nu: 'ぬ',
+        ne: 'ね',
+        no: 'の',
+      h:
+        ha: 'は',
+        hi: 'ひ',
+        fu: 'ふ',
+        he: 'へ',
+        ho: 'ほ',
+      m:
+        ma: 'ま',
+        mi: 'み',
+        mu: 'む',
+        me: 'め',
+        mo: 'も',
+      y:
+        ya: 'や',
+        yi: null,
+        yu: 'ゆ',
+        ye: null,
+        yo: 'よ',
+      r:
+        ra: 'ら',
+        ri: 'り',
+        ru: 'る',
+        re: 'れ',
+        ro: 'ろ',
+      w:
+        wa: 'わ',
+        wi: 'ゐ',
+        n: 'ん',
+        we: 'ゑ',
+        wo: 'を',
+    katakana:
+      a:
+        a: 'ア',
+        i: 'イ',
+        u: 'ウ',
+        e: 'エ',
+        o: 'オ',
+      k:
+        ka: 'カ',
+        ki: 'キ',
+        ku: 'ク',
+        ke: 'ケ',
+        ko: 'コ',
+      s:
+        sa: 'サ',
+        shi: 'シ',
+        su: 'ス',
+        se: 'セ',
+        so: 'ソ',
+      t:
+        ta: 'タ',
+        chi: 'チ',
+        tsu: 'ツ',
+        te: 'テ',
+        to: 'ト',
+      n:
+        na: 'ナ',
+        ni: 'ニ',
+        nu: 'ヌ',
+        ne: 'ネ',
+        no: 'ノ',
+      h:
+        ha: 'ハ',
+        hi: 'ヒ',
+        fu: 'フ',
+        he: 'ヘ',
+        ho: 'ホ',
+      m:
+        ma: 'マ',
+        mi: 'ミ',
+        mu: 'ム',
+        me: 'メ',
+        mo: 'モ',
+      y:
+        ya: 'ヤ',
+        yi: null,
+        yu: 'ユ',
+        ye: null,
+        yo: 'ヨ',
+      r:
+        ra: 'ラ',
+        ri: 'リ',
+        ru: 'ル',
+        re: 'レ',
+        ro: 'ロ',
+      w:
+        wa: 'ワ',
+        wi: 'ヰ',
+        n: 'ン',
+        we: 'ヱ',
+        wo: 'ヲ',
+
 
   rowCount: null
 
@@ -77,13 +140,14 @@ app =
   incorrect: 0,
 
   start: ->
+    @preparePairs()
     @insertTable()
     @resizeTable()
     self = @
     $(window).resize ->
       self.resizeTable()
     $('.choice').live 'click', (e) =>
-      @checkInput($(e.target).data('roman'), $(e.target).data('kana'))
+      @checkInput($(e.target))
     @reset()
     $('#reset-button').click =>
       @reset()
@@ -96,23 +160,47 @@ app =
     @displayChallenge()
 
   insertTable: ->
-    @pairs = []
     @rowCount = 0
-    for row_roman, row of @table
-      @rowCount += 1
-      $row_el = $('<tr/>')
-      for roman, kana of row
-        $cell_el = $('<td/>')
-        if kana
-          $cell_el.attr('id', "choice_#{roman}")
-          $cell_el.addClass('choice')
-          $cell_el.data('roman', roman)
-          $cell_el.data('kana', kana)
-          $cell_el.append roman
-          @pairs.push [roman, kana]
-        $row_el.append $cell_el
+    console.log @table
+    alreadyInserted = false
+    for syllabary, subtable of @table
+      for row_romaji, row of subtable
+        if alreadyInserted
+          @addDataToHtmlRow(syllabary, row)
+        else
+          @rowCount += 1
+          $rowEl = @buildHtmlRow(syllabary, row)
+          $('#choices tbody').append($rowEl)
+      alreadyInserted = true
 
-      $('#choices tbody').append($row_el)
+
+  buildHtmlRow: (syllabary, row) ->
+    $rowEl = $('<tr/>')
+    for romaji, kana of row
+      $cellEl = $('<td/>')
+      if kana
+        $cellEl.attr('id', "choice_#{romaji}")
+        $cellEl.addClass('choice')
+        $cellEl.data('romaji', romaji)
+        $cellEl.data(syllabary, kana)
+        $cellEl.append romaji
+      $rowEl.append $cellEl
+    $rowEl
+
+  addDataToHtmlRow: (syllabary, row) ->
+    for romaji, kana of row
+      $cellEl = $("#choice_#{romaji}")
+      if kana
+        $cellEl.data(syllabary, kana)
+
+  preparePairs: ->
+    @pairs = []
+    for syllabary, subtable of @table
+      for row_romaji, row of subtable
+        for romaji, kana of row
+          if kana
+            @pairs.push [romaji, kana, syllabary]
+
 
   resizeTable: ->
     rowSize = ($(window).height() - 10) / (@rowCount + 1) - 4
@@ -143,24 +231,27 @@ app =
     $('#challenge').html(@currentPair[1])
     $('#incorrect').html('')
 
-  checkInput: (selectedRoman, selectedKana) ->
-    correctRoman = @currentPair[0]
-    if selectedRoman == correctRoman
+  checkInput: ($el) ->
+    selectedRomaji = $el.data('romaji')
+    sylabbary = @currentPair[2]
+    selectedKana = $el.data(sylabbary)
+    correctRomaji = @currentPair[0]
+    if selectedRomaji == correctRomaji
       @displayChallenge()
       @correct += 1
     else
       @reinsertToQueue(@currentPair[0], @currentPair[1])
-      @reinsertToQueue(selectedRoman, selectedKana)
-      @displayIncorrect(selectedRoman, selectedKana)
+      @reinsertToQueue(selectedRomaji, selectedKana)
+      @displayIncorrect(selectedRomaji, selectedKana)
       @incorrect += 1
     @displayStats()
     #@debugQueue()
 
-  displayIncorrect: (selectedRoman, selectedKana) ->
+  displayIncorrect: (selectedRomaji, selectedKana) ->
     $('#incorrect').html(selectedKana)
 
-  reinsertToQueue: (roman, kana) ->
-    e = [roman, kana]
+  reinsertToQueue: (romaji, kana) ->
+    e = [romaji, kana]
     @concatToQueue [e, e, e]
     @queue = @queue.shuffle()
 
