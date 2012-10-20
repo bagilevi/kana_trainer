@@ -301,6 +301,7 @@
         }
       }
       this.currentPair = newPair;
+      console.log('currentPair', this.currentPair);
       $('#challenge').html(this.currentPair[1]);
       $('#incorrect').html('');
       this.failCount = 0;
@@ -320,15 +321,16 @@
       } else {
         this.failCount += 1;
         this.reinsertToQueue(this.currentPair);
-        this.reinsertToQueue(selectedRomaji, selectedKana);
+        this.reinsertToQueue([selectedRomaji, selectedKana, sylabbary]);
         this.displayIncorrect(selectedRomaji, selectedKana);
         this.incorrect += 1;
       }
       this.displayStats();
       if (this.failCount >= 3) {
         this.highlighted = true;
-        return this.highlightCorrectAnswer(correctRomaji);
+        this.highlightCorrectAnswer(correctRomaji);
       }
+      return this.debugQueue();
     },
     displayIncorrect: function(selectedRomaji, selectedKana) {
       return $('#incorrect').html(selectedKana);
