@@ -80,78 +80,6 @@
           we: 'ゑ',
           wo: 'を'
         }
-      },
-      katakana: {
-        a: {
-          a: 'ア',
-          i: 'イ',
-          u: 'ウ',
-          e: 'エ',
-          o: 'オ'
-        },
-        k: {
-          ka: 'カ',
-          ki: 'キ',
-          ku: 'ク',
-          ke: 'ケ',
-          ko: 'コ'
-        },
-        s: {
-          sa: 'サ',
-          shi: 'シ',
-          su: 'ス',
-          se: 'セ',
-          so: 'ソ'
-        },
-        t: {
-          ta: 'タ',
-          chi: 'チ',
-          tsu: 'ツ',
-          te: 'テ',
-          to: 'ト'
-        },
-        n: {
-          na: 'ナ',
-          ni: 'ニ',
-          nu: 'ヌ',
-          ne: 'ネ',
-          no: 'ノ'
-        },
-        h: {
-          ha: 'ハ',
-          hi: 'ヒ',
-          fu: 'フ',
-          he: 'ヘ',
-          ho: 'ホ'
-        },
-        m: {
-          ma: 'マ',
-          mi: 'ミ',
-          mu: 'ム',
-          me: 'メ',
-          mo: 'モ'
-        },
-        y: {
-          ya: 'ヤ',
-          yi: null,
-          yu: 'ユ',
-          ye: null,
-          yo: 'ヨ'
-        },
-        r: {
-          ra: 'ラ',
-          ri: 'リ',
-          ru: 'ル',
-          re: 'レ',
-          ro: 'ロ'
-        },
-        w: {
-          wa: 'ワ',
-          wi: 'ヰ',
-          n: 'ン',
-          we: 'ヱ',
-          wo: 'ヲ'
-        }
       }
     },
     rowCount: null,
@@ -292,6 +220,7 @@
     },
     displayChallenge: function() {
       var newPair;
+      this.tDisplayed = new Date().getTime();
       this.populateQueue();
       newPair = this.queue.shift();
       if (this.currentPair) {
@@ -308,16 +237,21 @@
       return this.highlighted = false;
     },
     checkInput: function($el) {
-      var correctRomaji, selectedKana, selectedRomaji, sylabbary;
+      var answerDelayMs, correctRomaji, selectedKana, selectedRomaji, sylabbary, tAnswered;
       selectedRomaji = $el.data('romaji');
       sylabbary = this.currentPair[2];
       selectedKana = $el.data(sylabbary);
       correctRomaji = this.currentPair[0];
       if (selectedRomaji === correctRomaji) {
-        this.displayChallenge();
         if (!this.highlighted) {
           this.correct += 1;
+          tAnswered = new Date().getTime();
+          answerDelayMs = tAnswered - this.tDisplayed;
+          if (answerDelayMs >= 2500) {
+            this.reinsertToQueue(this.currentPair);
+          }
         }
+        this.displayChallenge();
       } else {
         this.failCount += 1;
         this.reinsertToQueue(this.currentPair);

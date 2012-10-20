@@ -65,67 +65,67 @@ app =
         n: 'ん',
         we: 'ゑ',
         wo: 'を',
-    katakana:
-      a:
-        a: 'ア',
-        i: 'イ',
-        u: 'ウ',
-        e: 'エ',
-        o: 'オ',
-      k:
-        ka: 'カ',
-        ki: 'キ',
-        ku: 'ク',
-        ke: 'ケ',
-        ko: 'コ',
-      s:
-        sa: 'サ',
-        shi: 'シ',
-        su: 'ス',
-        se: 'セ',
-        so: 'ソ',
-      t:
-        ta: 'タ',
-        chi: 'チ',
-        tsu: 'ツ',
-        te: 'テ',
-        to: 'ト',
-      n:
-        na: 'ナ',
-        ni: 'ニ',
-        nu: 'ヌ',
-        ne: 'ネ',
-        no: 'ノ',
-      h:
-        ha: 'ハ',
-        hi: 'ヒ',
-        fu: 'フ',
-        he: 'ヘ',
-        ho: 'ホ',
-      m:
-        ma: 'マ',
-        mi: 'ミ',
-        mu: 'ム',
-        me: 'メ',
-        mo: 'モ',
-      y:
-        ya: 'ヤ',
-        yi: null,
-        yu: 'ユ',
-        ye: null,
-        yo: 'ヨ',
-      r:
-        ra: 'ラ',
-        ri: 'リ',
-        ru: 'ル',
-        re: 'レ',
-        ro: 'ロ',
-      w:
-        wa: 'ワ',
-        wi: 'ヰ',
-        n: 'ン',
-        we: 'ヱ',
-        wo: 'ヲ',
+    #katakana:
+      #a:
+        #a: 'ア',
+        #i: 'イ',
+        #u: 'ウ',
+        #e: 'エ',
+        #o: 'オ',
+      #k:
+        #ka: 'カ',
+        #ki: 'キ',
+        #ku: 'ク',
+        #ke: 'ケ',
+        #ko: 'コ',
+      #s:
+        #sa: 'サ',
+        #shi: 'シ',
+        #su: 'ス',
+        #se: 'セ',
+        #so: 'ソ',
+      #t:
+        #ta: 'タ',
+        #chi: 'チ',
+        #tsu: 'ツ',
+        #te: 'テ',
+        #to: 'ト',
+      #n:
+        #na: 'ナ',
+        #ni: 'ニ',
+        #nu: 'ヌ',
+        #ne: 'ネ',
+        #no: 'ノ',
+      #h:
+        #ha: 'ハ',
+        #hi: 'ヒ',
+        #fu: 'フ',
+        #he: 'ヘ',
+        #ho: 'ホ',
+      #m:
+        #ma: 'マ',
+        #mi: 'ミ',
+        #mu: 'ム',
+        #me: 'メ',
+        #mo: 'モ',
+      #y:
+        #ya: 'ヤ',
+        #yi: null,
+        #yu: 'ユ',
+        #ye: null,
+        #yo: 'ヨ',
+      #r:
+        #ra: 'ラ',
+        #ri: 'リ',
+        #ru: 'ル',
+        #re: 'レ',
+        #ro: 'ロ',
+      #w:
+        #wa: 'ワ',
+        #wi: 'ヰ',
+        #n: 'ン',
+        #we: 'ヱ',
+        #wo: 'ヲ',
 
 
   rowCount: null
@@ -223,6 +223,7 @@ app =
 
 
   displayChallenge: ->
+    @tDisplayed = new Date().getTime();
     @populateQueue()
     newPair = @queue.shift()
     if @currentPair
@@ -242,9 +243,13 @@ app =
     selectedKana = $el.data(sylabbary)
     correctRomaji = @currentPair[0]
     if selectedRomaji == correctRomaji
-      @displayChallenge()
       unless @highlighted
         @correct += 1
+        tAnswered = new Date().getTime()
+        answerDelayMs = (tAnswered - @tDisplayed)
+        if answerDelayMs >= 2500
+          @reinsertToQueue(@currentPair)
+      @displayChallenge()
     else
       @failCount += 1
       @reinsertToQueue(@currentPair)
