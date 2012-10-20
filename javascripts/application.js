@@ -160,6 +160,12 @@
       var newPair;
       this.populateQueue();
       newPair = this.queue.shift();
+      if (this.currentPair) {
+        while (newPair[0] === this.currentPair[0]) {
+          this.queue.push(newPair);
+          newPair = this.queue.shift();
+        }
+      }
       this.currentPair = newPair;
       $('#challenge').html(this.currentPair[1]);
       return $('#incorrect').html('');
